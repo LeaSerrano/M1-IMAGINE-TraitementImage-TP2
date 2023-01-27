@@ -1,0 +1,2 @@
+Pour ex 1, 2, 3 utiliser image petite (128x128)
+pour ex 4, on peut réutiliser image de 512x512
