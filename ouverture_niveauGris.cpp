@@ -1,5 +1,32 @@
 #include <stdio.h>
 #include "image_ppm.h"
+#include <iostream>
+
+int pixel_plus_grand_voisin(OCTET *ImgIn, int i, int j, int nH, int nW) {
+    int max;
+
+    for (int dx = -1; dx <= 1; dx++) {
+        for (int dy = -1; dy <= 1; dy++) {
+            if ((i+dx) >= 0 && (i+dx) < nW && (j+dy) >= 0 && (j+dy) < nH){ 
+                if (dx == -1 && dy == -1) {
+                    max = ImgIn[(i-1)*nW+(j-1)];
+                }
+                if (ImgIn[(i+dx)*nW+(j+dy)] > max ) {
+                    max = ImgIn[(i+dx)*nW+(j+dy)];
+                } 
+            } 
+        } 
+    } 
+    return max;
+}
+
+void dilatation(OCTET *ImgIn, OCTET *ImgOut, int nH, int nW) {
+   for (int i=0; i < nH; i++) {
+        for (int j=0; j < nW; j++){
+            ImgOut[i*nW+j] = pixel_plus_grand_voisin(ImgIn, i, j, nH, nW);
+        }
+    }  
+}
 
 int pixel_plus_petit_voisin(OCTET *ImgIn, int i, int j, int nH, int nW) {
     int min;
@@ -50,8 +77,12 @@ int main(int argc, char* argv[])
    lire_image_pgm(cNomImgLue, ImgIn, nH * nW);
    allocation_tableau(ImgOut, OCTET, nTaille);
 
-   erosion(ImgIn, ImgOut, nH, nW);
+   OCTET *ImgTemp;
+   allocation_tableau(ImgTemp, OCTET, nH*nW);
 
+   erosion(ImgIn, ImgTemp, nH, nW);
+   dilatation(ImgTemp, ImgOut, nH, nW);
+   
    ecrire_image_pgm(cNomImgEcrite, ImgOut,  nH, nW);
    free(ImgIn); free(ImgOut);
 

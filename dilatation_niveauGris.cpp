@@ -2,11 +2,14 @@
 #include "image_ppm.h"
 
 int pixel_plus_grand_voisin(OCTET *ImgIn, int i, int j, int nH, int nW) {
-    int max = ImgIn[(i-1)*nW+(j-1)];
+    int max;
 
     for (int dx = -1; dx <= 1; dx++) {
         for (int dy = -1; dy <= 1; dy++) {
             if ((i+dx) >= 0 && (i+dx) < nW && (j+dy) >= 0 && (j+dy) < nH){ 
+                if (dx == -1 && dy == -1) {
+                    max = ImgIn[(i-1)*nW+(j-1)];
+                }
                 if (ImgIn[(i+dx)*nW+(j+dy)] > max ) {
                     max = ImgIn[(i+dx)*nW+(j+dy)];
                 } 
